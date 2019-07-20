@@ -1,52 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
-  <div class="keys">
-    <div data-key="65" class="key">
-      <kbd>A</kbd>
-      <span class="sound">clap</span>
-    </div>
-    <div data-key="83" class="key">
-      <kbd>S</kbd>
-      <span class="sound">hihat</span>
-    </div>
-    <div data-key="68" class="key">
-      <kbd>D</kbd>
-      <span class="sound">kick</span>
-    </div>
-    <div data-key="70" class="key">
-      <kbd>F</kbd>
-      <span class="sound">openhat</span>
-    </div>
-    <div data-key="71" class="key">
-      <kbd>G</kbd>
-      <span class="sound">boom</span>
-    </div>
-    <div data-key="72" class="key">
-      <kbd>H</kbd>
-      <span class="sound">ride</span>
-    </div>
-    <div data-key="74" class="key">
-      <kbd>J</kbd>
-      <span class="sound">snare</span>
-    </div>
-    <div data-key="75" class="key">
-      <kbd>K</kbd>
-      <span class="sound">tom</span>
-    </div>
-    <div data-key="76" class="key">
-      <kbd>L</kbd>
-      <span class="sound">tink</span>
+<div class="body-column">
+  <div class="key-container">
+    <div class="keys">
+      <div data-key="65" class="key" class="toggle">
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
+      </div>
+      <div data-key="83" class="key" class="toggle">
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
+      </div>
+      <div data-key="68" class="key" class="toggle">
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
+      </div>
+      <div data-key="70" class="key" class="toggle">
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
+      </div>
+      <div data-key="71" class="key" class="toggle">
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
+      </div>
+      <div data-key="72" class="key" class="toggle">
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
+      </div>
+      <div data-key="74" class="key" class="toggle">
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
+      </div>
+      <div data-key="75" class="key" class="toggle">
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
+      </div>
+      <div data-key="76" class="key" class="toggle">
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
+      </div>
     </div>
   </div>
 
+  <div class="instructions">
+    <p>Type a key to trigger a sound. Press SHIFT + a key to trigger a loop on that key. Press shift again to remove
+      loops.</p>
+  </div>
+</div>
   <audio data-key="65" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
   <audio data-key="68" src="sounds/kick.wav"></audio>
@@ -57,10 +65,69 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    function playSound(e) {
+      let audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+      let key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+      if (!audio) return; //stops the function from running altogether.
+      audio.currentTime = 0; //rewinds the element to the start.
+      audio.play();
+      audio.loop = false;
+      key.classList.add('playing');
+      console.log(key.classList);
+      console.log(
+        `audio[data-key="${e.keyCode}"]`) // THESE SEEM TO BE THE BITS I NEED. audio[data-key="#{e.keyCode}"] tells me the exact key code I need to be adding the class to.
 
-</script>
+
+//FINDING BUGS - I'm using an event listener using the space bar to "scrub" the loop behavior from audio elements.
+        window.addEventListener('keypress', removeLoop);
+
+        function removeLoop() {
+        addEventListener("keydown", function (event) {
+          if (event.Space) {
+            audio.loop = false;
+            audio.pause();
+          }
+        })
+      }
+
+
+      window.addEventListener('keypress', keyCombination);
+
+      function keyCombination() {
+        addEventListener("keydown", function (event) {
+          if (`.key[data-key="${e.keyCode}"]` && event.shiftKey) {
+            loopToggle();
+            console.log('I am working.')
+          }
+        })
+      }
+
+      function loopToggle() {
+        if (audio.loop === false) {
+          audio.loop = true;
+          console.log("audio is looping") /* this is to see if the loop behavior is working */
+        } else {
+          audio.loop = false;
+          audio.pause();
+          console.log("No loop for you.") /* this is to see if the loop behavior is working */
+        }
+      }
+    }
+
+    function removeTransition(e) {
+      if (e.propertyName !== 'transform') return; //skip if it's not a transform.
+      this.classList.remove('playing');
+    };
+
+
+
+    const keys = document.querySelectorAll('.key');
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    window.addEventListener('keydown', playSound);
+  </script>
 
 
 </body>
+
 </html>

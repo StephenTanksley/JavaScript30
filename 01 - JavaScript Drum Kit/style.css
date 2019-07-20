@@ -49,3 +49,21 @@ kbd {
   letter-spacing: .1rem;
   color: #ffc600;
 }
+
+.instructions {
+  color: white;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  display: flex;
+  font-size: 2rem;
+  border: .2rem dotted white;
+  padding: 1rem;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.body-column {
+  display: flex;
+  flex-direction: column;
+  border: 12px solid white;
+}
