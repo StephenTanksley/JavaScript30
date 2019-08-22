@@ -83,8 +83,8 @@
         window.addEventListener('keypress', removeLoop);
 
         function removeLoop() {
-        addEventListener("keydown", function (event) {
-          if (event.Space) {
+        addEventListener("keydown", function (e) {
+          if (e.Space) {
             audio.loop = false;
             audio.pause();
           }
@@ -101,7 +101,7 @@
             console.log('I am working.')
           }
         })
-      }
+      } 
 
       function loopToggle() {
         if (audio.loop === false) {
